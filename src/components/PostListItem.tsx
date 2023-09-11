@@ -1,17 +1,74 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { Post } from '@/types';
+import { FontAwesome } from '@expo/vector-icons';
 
 type PostListItemProps = {
 	post: Post;
 };
 
-const PostListItem = ({ post }: PostListItemProps) => {
+type FooterButtonProp = {
+	text: string;
+	icon: React.ComponentProps<typeof FontAwesome>['name'];
+};
+
+const FooterButton = ({ text, icon }: FooterButtonProp) => {
 	return (
-		<View>
-			<Text>{post.content}</Text>
+		<View style={{ flexDirection: 'row' }}>
+			<FontAwesome name={icon} size={16} color='gray' />
+			<Text style={{ marginLeft: 5, color: 'gray', fontWeight: '500' }}>{text}</Text>
 		</View>
 	);
 };
+
+const PostListItem = ({ post }: PostListItemProps) => {
+	return (
+		<View style={{ flex: 1 }}>
+			{/* Header */}
+			<View style={styles.header}>
+				<Image source={{ uri: post.author.image }} style={styles.userImage} />
+				<View>
+					<Text style={styles.userName}>{post.author.name}</Text>
+					<Text>{post.author.position}</Text>
+				</View>
+			</View>
+
+			{/* Text Content */}
+			<Text style={styles.content}>{post.content}</Text>
+
+			{/* Conditionally render post image */}
+			{post.image && <Image source={{ uri: post.image }} style={styles.postImage} />}
+
+			{/* footer */}
+			<View style={styles.footer}>
+				<FooterButton text='Like' icon='thumbs-o-up' />
+				<FooterButton text='Comment' icon='comment-o' />
+				<FooterButton text='Share' icon='share' />
+			</View>
+		</View>
+	);
+};
+
+const styles = StyleSheet.create({
+	header: { flexDirection: 'row', alignItems: 'center', padding: 10 },
+	userName: {
+		fontWeight: 'bold',
+		fontSize: 16,
+		marginBottom: 5,
+	},
+	userImage: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
+	postImage: { width: '100%', aspectRatio: 1 },
+	content: {
+		margin: 10,
+		marginTop: 0,
+	},
+	footer: {
+		flexDirection: 'row',
+		paddingVertical: 10,
+		justifyContent: 'space-around',
+		borderTopWidth: 0.5,
+		borderColor: 'lightgray',
+	},
+});
 
 export default PostListItem;

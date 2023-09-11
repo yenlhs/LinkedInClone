@@ -2,7 +2,8 @@ export type Post = {
 	id: string;
 	content: string;
 	image?: string;
-	like: number;
+	likes: number;
+	comments: Array<string>;
 	author: User;
 };
 

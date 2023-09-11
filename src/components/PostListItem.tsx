@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
 import { Post } from '@/types';
 import { FontAwesome } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 type PostListItemProps = {
 	post: Post;
@@ -23,29 +24,31 @@ const FooterButton = ({ text, icon }: FooterButtonProp) => {
 
 const PostListItem = ({ post }: PostListItemProps) => {
 	return (
-		<View style={{ flex: 1 }}>
-			{/* Header */}
-			<View style={styles.header}>
-				<Image source={{ uri: post.author.image }} style={styles.userImage} />
-				<View>
-					<Text style={styles.userName}>{post.author.name}</Text>
-					<Text>{post.author.position}</Text>
+		<Link href={`/posts/${post.id}`} asChild>
+			<Pressable style={{ flex: 1 }}>
+				{/* Header */}
+				<View style={styles.header}>
+					<Image source={{ uri: post.author.image }} style={styles.userImage} />
+					<View>
+						<Text style={styles.userName}>{post.author.name}</Text>
+						<Text>{post.author.position}</Text>
+					</View>
 				</View>
-			</View>
 
-			{/* Text Content */}
-			<Text style={styles.content}>{post.content}</Text>
+				{/* Text Content */}
+				<Text style={styles.content}>{post.content}</Text>
 
-			{/* Conditionally render post image */}
-			{post.image && <Image source={{ uri: post.image }} style={styles.postImage} />}
+				{/* Conditionally render post image */}
+				{post.image && <Image source={{ uri: post.image }} style={styles.postImage} />}
 
-			{/* footer */}
-			<View style={styles.footer}>
-				<FooterButton text='Like' icon='thumbs-o-up' />
-				<FooterButton text='Comment' icon='comment-o' />
-				<FooterButton text='Share' icon='share' />
-			</View>
-		</View>
+				{/* footer */}
+				<View style={styles.footer}>
+					<FooterButton text='Like' icon='thumbs-o-up' />
+					<FooterButton text='Comment' icon='comment-o' />
+					<FooterButton text='Share' icon='share' />
+				</View>
+			</Pressable>
+		</Link>
 	);
 };
 

@@ -4,8 +4,8 @@ import { Text, View } from '../../components/Themed';
 
 export default function NotificationsScreen() {
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Notifications</Text>
+		<View className='flex-1 justify-center items-center'>
+			<Text className='text-md font-bold'>Notifications</Text>
 		</View>
 	);
 }

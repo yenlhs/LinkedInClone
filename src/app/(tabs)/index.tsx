@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import PostListItem from '../../components/PostListItem';
 import { Text, View } from '../../components/Themed';
 import posts from '../../../assets/data/posts.json';
@@ -14,25 +13,5 @@ export default function HomeFeedScreen() {
 			showsVerticalScrollIndicator={false}
 			contentContainerStyle={{ gap: 10 }}
 		/>
-		// <View style={styles.container}>
-		// 	<PostListItem post={firstPost} />
-		// </View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		// alignItems: 'center',
-		// justifyContent: 'center',
-	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
-	},
-	separator: {
-		marginVertical: 30,
-		height: 1,
-		width: '80%',
-	},
-});

@@ -4,6 +4,18 @@ import { Pressable, TextInput } from 'react-native';
 import { useLayoutEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
+import { gql, useMutation } from '@apollo/client';
+
+const insertPost = gql`
+	mutation MyMutation($userid: ID, $image: String, $content: String) {
+		insertPost(userid: $userid, image: $image, content: $content) {
+			content
+			id
+			image
+			userid
+		}
+	}
+`;
 
 export default function NewPostScreen() {
 	const [content, setContent] = useState('');
@@ -11,8 +23,20 @@ export default function NewPostScreen() {
 	const navgiation = useNavigation();
 	const router = useRouter();
 
-	const onPost = () => {
-		console.warn('Posting', content);
+	const [handleMutation, { loading, error, data }] = useMutation(insertPost);
+
+	const onPost = async () => {
+		// console.warn('Posting', content);
+		try {
+			await handleMutation({
+				variables: {
+					userid: 2,
+					content: 'Hello again there',
+				},
+			});
+		} catch (e) {
+			console.log(e);
+		}
 		router.push('/(tabs)/');
 		setContent('');
 	};
@@ -34,11 +58,11 @@ export default function NewPostScreen() {
 			title: 'New Post',
 			headerRight: () => (
 				<Pressable onPress={onPost} className='bg-blue-100 p-2 rounded-md mr-2'>
-					<Text>Submit</Text>
+					<Text>{loading ? 'Submitting' : 'Submit'}</Text>
 				</Pressable>
 			),
 		});
-	}, [onPost]);
+	}, [onPost, loading]);
 
 	return (
 		<View className='flex-1 p-2'>

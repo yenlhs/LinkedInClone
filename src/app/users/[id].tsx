@@ -1,32 +1,64 @@
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import React, { useLayoutEffect, useState } from 'react';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import userJson from '../../../assets/data/user.json';
 import ExperienceListItem from '../../components/ExperienceListItem';
 import { User } from '@/types';
 import { ScrollView } from 'react-native-gesture-handler';
+import { gql, useQuery } from '@apollo/client';
+
+const query = gql`
+	query MyQuery($id: ID!) {
+		profile(id: $id) {
+			id
+			name
+			image
+			position
+			about
+			experience {
+				id
+				companyname
+				companyimage
+				title
+				userid
+			}
+			backimage
+		}
+	}
+`;
 
 const UserProfile = () => {
-	const [user, setUser] = useState<User>(userJson);
+	// const [user, setUser] = useState<User>(userJson);
 	const { id } = useLocalSearchParams();
 	const navigation = useNavigation();
+	const { loading, error, data } = useQuery(query, { variables: { id } });
+	const user = data?.profile;
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: user?.name || 'User',
+		});
+	}, [user?.name]);
+
+	if (loading) {
+		return <ActivityIndicator />;
+	}
+
+	if (error) {
+		console.log(error);
+		return <Text>Something went wrong</Text>;
+	}
 
 	const onConnect = () => {
 		console.log('Connect Pressed');
 	};
-
-	useLayoutEffect(() => {
-		navigation.setOptions({
-			title: user.name,
-		});
-	}, [user?.name]);
 
 	return (
 		<ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 			{/* header */}
 			<View style={styles.header}>
 				{/* background image */}
-				<Image source={{ uri: user.backImage }} style={styles.backImage} />
+				<Image source={{ uri: user.backimage }} style={styles.backImage} />
 				<View style={styles.headerContent}>
 					{/* profile image */}
 					<Image source={{ uri: user.image }} style={styles.image} />

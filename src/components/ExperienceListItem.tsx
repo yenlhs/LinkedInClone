@@ -9,8 +9,11 @@ type ExperienceListItemProps = {
 const ExperienceListItem = ({ experience }: ExperienceListItemProps) => {
 	return (
 		<View className='flex flex-row p-2 items-center border-b-2 border-gray-100'>
-			<Image source={{ uri: experience.companyImage }} alt='pic' className='w-20 h-20' />
-			<Text>{experience.companyName}</Text>
+			<Image source={{ uri: experience.companyimage }} alt='pic' className='w-20 h-20' />
+			<View>
+				<Text>{experience.title}</Text>
+				<Text>{experience.companyname}</Text>
+			</View>
 		</View>
 	);
 };

@@ -3,9 +3,15 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Text } from 'react-native';
 import { ApolloProvider } from '@apollo/client';
 import client from '../apollo/Client';
+import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
+import SignUpScreen from '../components/auth/SignUpScreen';
+import SignInScreen from '../components/auth/SignInScreen';
+
+const clerkkey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+// const clerkkey = 'pk_test_c3BsZW5kaWQtYnVsbGRvZy05My5jbGVyay5hY2NvdW50cy5kZXYk';
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -48,14 +54,22 @@ function RootLayoutNav() {
 	const colorScheme = useColorScheme();
 
 	return (
-		<ApolloProvider client={client}>
-			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<Stack>
-					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-					<Stack.Screen name='posts/[id]' options={{ title: 'Post' }} />
-					<Stack.Screen name='modal' options={{ presentation: 'modal' }} />
-				</Stack>
-			</ThemeProvider>
-		</ApolloProvider>
+		<ClerkProvider publishableKey={clerkkey}>
+			<ApolloProvider client={client}>
+				<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+					<SignedIn>
+						<Stack>
+							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+							<Stack.Screen name='posts/[id]' options={{ title: 'Post' }} />
+							<Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+						</Stack>
+					</SignedIn>
+					<SignedOut>
+						{/* <SignUpScreen /> */}
+						<SignInScreen />
+					</SignedOut>
+				</ThemeProvider>
+			</ApolloProvider>
+		</ClerkProvider>
 	);
 }

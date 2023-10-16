@@ -1,5 +1,18 @@
 // Container component
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, TypePolicies } from '@apollo/client';
+
+const typePolicies: TypePolicies = {
+	Query: {
+		fields: {
+			postPaginatedList:{
+				keyArgs: false,
+				merge(existing, incoming){
+					return [...existing, ...incoming]
+				}
+			}
+		}
+	}
+}
 
 const client = new ApolloClient({
 	uri: 'https://massaranduba.stepzen.net/api/ordered-numbat/__graphql',

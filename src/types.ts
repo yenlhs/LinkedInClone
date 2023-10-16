@@ -4,7 +4,7 @@ export type Post = {
 	image?: string;
 	likes: number;
 	comments: Array<string>;
-	author: User;
+	profile: User;
 };
 
 export type User = {

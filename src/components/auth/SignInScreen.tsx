@@ -26,7 +26,7 @@ export default function SignInScreen() {
 		}
 	};
 	return (
-		<View className='flex-1 justify-center items-center gap-2'>
+		<View className='gap-2'>
 			<View>
 				<TextInput
 					autoCapitalize='none'

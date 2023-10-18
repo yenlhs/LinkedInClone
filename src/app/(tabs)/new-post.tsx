@@ -37,10 +37,7 @@ export default function NewPostScreen() {
 					content,
 				},
 			});
-			console.log('redirecting.........');
 			router.push('/(tabs)/');
-			// router.push('/(tabs)/jobs');
-			console.log('redirected.........');
 			setContent('');
 			setImage(null);
 		} catch (e) {

@@ -1,8 +1,6 @@
 import PostListItem from '../../components/PostListItem';
 import { Text, View } from '../../components/Themed';
-import posts from '../../../assets/data/posts.json';
-import { FlatList } from 'react-native-gesture-handler';
-
+import { FlatList } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
 import { ActivityIndicator } from 'react-native';
 import { useState } from 'react';
@@ -23,15 +21,28 @@ const postPaginatedList = gql`
 	}
 `;
 
-const firstPost = posts[0];
-
 export default function HomeFeedScreen() {
 	const [hasMore, setHasMore] = useState(true);
 	const { loading, error, data, fetchMore, refetch } = useQuery(postPaginatedList, {
 		variables: {
-			first: 2,
+			first: 5,
 		},
 	});
+
+	const loadMore = async () => {
+		if (!hasMore) {
+			return;
+		}
+		const res = await fetchMore({
+			variables: {
+				after: data.postPaginatedList.length,
+			},
+		});
+
+		if (res.data.postPaginatedList.length === 0) {
+			setHasMore(false);
+		}
+	};
 
 	if (loading) {
 		return <ActivityIndicator />;
@@ -41,19 +52,6 @@ export default function HomeFeedScreen() {
 		return <Text>Something went wrong!</Text>;
 	}
 
-	const loadMore = async () => {
-		if (!hasMore) {
-			return;
-		}
-		console.log('load more');
-		const res = await fetchMore({
-			variables: {
-				after: data.postPaginatedList.length,
-			},
-		});
-
-		if (res.data.postPaginatedList.length === 0) setHasMore(false);
-	};
 	return (
 		<FlatList
 			data={data.postPaginatedList}

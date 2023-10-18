@@ -25,22 +25,27 @@ export default function NewPostScreen() {
 	const navgiation = useNavigation();
 	const router = useRouter();
 
-	const [handleMutation, { loading, error, data }] = useMutation(insertPost);
+	const [handleMutation, { loading, error, data }] = useMutation(insertPost, {
+		refetchQueries: ['PostPaginatedListQuery'],
+	});
 
 	const onPost = async () => {
-		// console.warn('Posting', content);
 		try {
 			await handleMutation({
 				variables: {
 					userid: dbUser.id,
-					content: 'Hello again there',
+					content,
 				},
 			});
+			console.log('redirecting.........');
+			router.push('/(tabs)/');
+			// router.push('/(tabs)/jobs');
+			console.log('redirected.........');
+			setContent('');
+			setImage(null);
 		} catch (e) {
 			console.log(e);
 		}
-		router.push('/(tabs)/');
-		setContent('');
 	};
 
 	const pickImage = async () => {
